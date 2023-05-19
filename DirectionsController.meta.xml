@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>54.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Directions App</masterLabel>
+    <description>Provides functionality to get directions, distance, travel time, and cost of travel using Google Maps API.</description>
+</LightningComponentBundle>
