@@ -1,27 +1,28 @@
 <template>
-  <lightning-card title="Directions App">
-    <div class="slds-m-around_medium">
+  <lightning-card title="Get Directions">
+    <div class="slds-p-around_medium">
       <lightning-input
-        label="Origin"
-        value={origin}
+        label="Origin Address"
+        value={originAddress}
         onchange={handleOriginChange}
       ></lightning-input>
       <lightning-input
-        label="Destination"
-        value={destination}
+        label="Destination Address"
+        value={destinationAddress}
         onchange={handleDestinationChange}
       ></lightning-input>
       <lightning-button
         label="Get Directions"
-        onclick={getDirections}
         variant="brand"
-        class="slds-m-top_medium"
+        onclick={getDirections}
       ></lightning-button>
     </div>
-    <div if:true={showResults}>
-      <p>Distance: {distance}</p>
-      <p>Travel Time: {travelTime}</p>
-      <p>Cost of Travel: {costOfTravel}</p>
-    </div>
+    <template if:true={showResults}>
+      <div class="slds-p-around_medium">
+        <p>Distance: {distance}</p>
+        <p>Travel Time: {travelTime}</p>
+        <p>Cost of Travel: {costOfTravel}</p>
+      </div>
+    </template>
   </lightning-card>
 </template>
