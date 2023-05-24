@@ -1,32 +1,37 @@
-import { LightningElement, track } from 'lwc';
-import getDirectionsData from '@salesforce/apex/DirectionsController.getDirectionsData';
+<script>
+import { LightningElement, track, api } from 'lwc';
+import getDirections from '@salesforce/apex/DirectionsController.getDirections';
 
-export default class DirectionsApp extends LightningElement {
-  @track origin;
-  @track destination;
+export default class GetDirectionsComponent extends LightningElement {
+  @track originAddress;
+  @track destinationAddress;
+  @track showResults = false;
   @track distance;
   @track travelTime;
   @track costOfTravel;
-  @track showResults = false;
 
   handleOriginChange(event) {
-    this.origin = event.target.value;
+    this.originAddress = event.target.value;
   }
 
   handleDestinationChange(event) {
-    this.destination = event.target.value;
+    this.destinationAddress = event.target.value;
   }
 
   getDirections() {
-    getDirectionsData({ origin: this.origin, destination: this.destination })
+    getDirections({
+      originAddress: this.originAddress,
+      destinationAddress: this.destinationAddress
+    })
       .then(result => {
+        this.showResults = true;
         this.distance = result.distance;
         this.travelTime = result.travelTime;
         this.costOfTravel = result.costOfTravel;
-        this.showResults = true;
       })
       .catch(error => {
-        console.error(error);
+        // Handle error
       });
   }
 }
+</script>
