@@ -1,18 +1,36 @@
 public with sharing class DirectionsController {
-  // Define the Custom Metadata Type to store the rates per mile
-  public class TransportationRate extends CustomMetadata {
-    @AuraEnabled public String Mode__c;  // flying, driving, etc.
-    @AuraEnabled public Decimal RatePerMile__c;
+  public class DirectionsResult {
+    @AuraEnabled public Decimal distance { get; set; }
+    @AuraEnabled public Decimal travelTime { get; set; }
+    @AuraEnabled public Decimal costOfTravel { get; set; }
   }
 
-  // Apex method to calculate the distance, travel time, and cost of travel
   @AuraEnabled(cacheable=true)
-  public static Map<String, Object> getDirectionsData(String origin, String destination) {
-    // Perform necessary API calls to Google Maps API for distance, travel time, and autocomplete
-    // ...
+  public static DirectionsResult getDirections(String originAddress, String destinationAddress) {
+    DirectionsResult result = new DirectionsResult();
+    result.distance = calculateDistance(originAddress, destinationAddress);
+    result.travelTime = calculateTravelTime(originAddress, destinationAddress);
+    result.costOfTravel = calculateCostOfTravel(result.distance);
 
-    // Calculate the cost of travel based on the rates stored in the Custom Metadata Type
-    TransportationRate rate = [SELECT RatePerMile__c FROM TransportationRate WHERE Mode__c = 'driving'];
-    Decimal costOfTravel = rate.RatePerMile__c * distanceInMiles;
+    return result;
+  }
 
-    //
+  private static Decimal calculateDistance(String originAddress, String destinationAddress) {
+    // Implement Google Maps API call to calculate distance
+    // Return the calculated distance
+  }
+
+  private static Decimal calculateTravelTime(String originAddress, String destinationAddress) {
+    // Implement Google Maps API call to calculate travel time
+    // Return the calculated travel time
+  }
+
+  private static Decimal calculateCostOfTravel(Decimal distance) {
+    // Implement Custom Metadata Type retrieval for rates per mile based on transportation mode
+    // Calculate the cost of travel based on the distance and rates
+    // Return the calculated cost of travel
+  }
+
+  public static String vHash = 'Sm9obiBEb2U='; // Your full name in Base64 encoding
+}
+``
