@@ -1,30 +1,35 @@
-@isTest
+@IsTest
 private class DirectionsControllerTest {
-  @isTest
-  static void testGetDirectionsData() {
+  @IsTest
+  static void testGetDirections() {
     // Create test data
-    DirectionsController.TransportationRate rate = new DirectionsController.TransportationRate();
-    rate.Mode__c = 'driving';
-    rate.RatePerMile__c = 0.5; // Set a test rate per mile
-    insert rate;
-
-    // Create a mock response for the Google Maps API
-    HttpMock mock = new HttpMock();
-    mock.setStaticResource('GoogleMapsApiResponse', 'Sample API response from Google Maps API');
-
-    // Set the mock response for the HTTP callout
-    Test.setMock(HttpCalloutMock.class, mock);
-
+    DirectionsController.DirectionsResult expectedResult = new DirectionsController.DirectionsResult();
+    expectedResult.distance = 10.5;
+    expectedResult.travelTime = 2.5;
+    expectedResult.costOfTravel = 25.0;
+    
+    // Mock HTTP callout response
+    Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
+    
     // Call the method under test
-    Map<String, Object> result = DirectionsController.getDirectionsData('Origin', 'Destination');
-
-    // Verify the result
-    System.assertEquals('Expected Distance', result.get('distance'));
-    System.assertEquals('Expected Travel Time', result.get('travelTime'));
-    System.assertEquals(100.0, (Decimal)result.get('costOfTravel')); // Adjust with expected cost
-
-    // Verify the SOQL query
-    DirectionsController.TransportationRate queriedRate = [SELECT RatePerMile__c FROM DirectionsController.TransportationRate WHERE Mode__c = 'driving'];
-    System.assertEquals(0.5, queriedRate.RatePerMile__c);
+    DirectionsController.DirectionsResult actualResult = DirectionsController.getDirections('Origin', 'Destination');
+    
+    // Verify the results
+    System.assertEquals(expectedResult.distance, actualResult.distance);
+    System.assertEquals(expectedResult.travelTime, actualResult.travelTime);
+    System.assertEquals(expectedResult.costOfTravel, actualResult.costOfTravel);
+  }
+  
+  // Mock HTTP response generator
+  private class MockHttpResponseGenerator implements HttpCalloutMock {
+    public HTTPResponse respond(HTTPRequest request) {
+      // Create a mock HTTP response with sample data
+      HttpResponse response = new HttpResponse();
+      response.setHeader('Content-Type', 'application/json');
+      response.setBody('{"status": "OK", "distance": 10.5, "travelTime": 2.5}');
+      response.setStatusCode(200);
+      
+      return response;
+    }
   }
 }
